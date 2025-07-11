@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Mastery - 34-Day Plan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --primary-light: #9d4edd;
+            --secondary: #ff6b6b;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --surface-light: #2d2d2d;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --progress-bar: #4caf50;
+            --border: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 700px;
+            margin: 0 auto 25px;
+        }
+
+        .progress-container {
+            background: var(--surface);
+            border-radius: 50px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .day-card {
+            background: var(--surface);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-color: var(--primary-light);
+        }
+
+        .day-number {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 0 0 15px;
+        }
+
+        .day-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-light);
+            padding-right: 40px;
+        }
+
+        .topics {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .topics li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .topics li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: -15px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .checkbox-label {
+            margin-left: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .custom-checkbox.checked:after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+        }
+
+        .week-divider {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .week-divider h2 {
+            display: inline-block;
+            padding: 10px 30px;
+            background: var(--primary);
+            border-radius: 50px;
+            font-size: 1.4rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .days-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .stat-box {
+                min-width: 120px;
+                padding: 12px 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat-box {
+                min-width: 100px;
+                padding: 10px 12px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-laptop-code"></i> Frontend Mastery Journey</h1>
+            <p class="subtitle">A comprehensive 34-day plan to master frontend web development</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress-text">0% Complete</div>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="days-completed">0</div>
+                    <div>Days Completed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="days-remaining">34</div>
+                    <div>Days Remaining</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="completion">0%</div>
+                    <div>Total Progress</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="days-container">
+            <!-- Week 1: HTML Fundamentals -->
+            <div class="week-divider">
+                <h2><i class="fas fa-code"></i> Week 1: HTML Fundamentals</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">1</div>
+                <h3 class="day-title">HTML Structure & Elements</h3>
+                <p>Learn the building blocks of HTML documents</p>
+                <ul class="topics">
+                    <li>Document structure</li>
+                    <li>Basic tags (h1-p, div, span)</li>
+                    <li>Attributes and values</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="1"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">2</div>
+                <h3 class="day-title">Semantic HTML</h3>
+                <p>Build meaningful structure for accessibility</p>
+                <ul class="topics">
+                    <li>header, nav, main, section</li>
+                    <li>article, aside, footer</li>
+                    <li>Accessibility benefits</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="2"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">3</div>
+                <h3 class="day-title">Forms & Inputs</h3>
+                <p>Create interactive user inputs</p>
+                <ul class="topics">
+                    <li>Form structure</li>
+                    <li>Input types (text, email, password)</li>
+                    <li>Select, textarea, buttons</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="3"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">4</div>
+                <h3 class="day-title">Multimedia & Embedding</h3>
+                <p>Add rich media to your pages</p>
+                <ul class="topics">
+                    <li>Images and responsive images</li>
+                    <li>Audio and video elements</li>
+                    <li>Iframes and embedding</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="4"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">5</div>
+                <h3 class="day-title">HTML Validation & Best Practices</h3>
+                <p>Create robust, standards-compliant code</p>
+                <ul class="topics">
+                    <li>HTML validation tools</li>
+                    <li>SEO fundamentals</li>
+                    <li>Performance considerations</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="5"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 2: CSS Foundations -->
+            <div class="week-divider">
+                <h2><i class="fas fa-paint-brush"></i> Week 2: CSS Foundations</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">6</div>
+                <h3 class="day-title">CSS Basics & Selectors</h3>
+                <p>Styling your HTML elements</p>
+                <ul class="topics">
+                    <li>Inline, internal, external CSS</li>
+                    <li>Basic selectors (type, class, ID)</li>
+                    <li>Specificity and inheritance</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="6"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">7</div>
+                <h3 class="day-title">Box Model & Layout</h3>
+                <p>Understanding element structure</p>
+                <ul class="topics">
+                    <li>Margin, border, padding</li>
+                    <li>Box-sizing property</li>
+                    <li>Display types (block, inline, inline-block)</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="7"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">8</div>
+                <h3 class="day-title">Positioning & Flexbox</h3>
+                <p>Modern layout techniques</p>
+                <ul class="topics">
+                    <li>Position properties (static, relative, absolute, fixed, sticky)</li>
+                    <li>Flex container and items</li>
+                    <li>Responsive flex layouts</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="8"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">9</div>
+                <h3 class="day-title">CSS Grid</h3>
+                <p>Two-dimensional layouts</p>
+                <ul class="topics">
+                    <li>Grid container and items</li>
+                    <li>Grid tracks, lines, and areas</li>
+                    <li>Responsive grid layouts</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="9"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">10</div>
+                <h3 class="day-title">Responsive Design</h3>
+                <p>Create websites for all devices</p>
+                <ul class="topics">
+                    <li>Media queries</li>
+                    <li>Mobile-first approach</li>
+                    <li>Responsive units (rem, em, vw, vh)</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="10"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 3: Advanced CSS -->
+            <div class="week-divider">
+                <h2><i class="fas fa-magic"></i> Week 3: Advanced CSS</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">11</div>
+                <h3 class="day-title">Transitions & Animations</h3>
+                <p>Bring your interfaces to life</p>
+                <ul class="topics">
+                    <li>CSS transitions</li>
+                    <li>Keyframe animations</li>
+                    <li>Performance considerations</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="11"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">12</div>
+                <h3 class="day-title">Variables & Custom Properties</h3>
+                <p>Maintainable and dynamic styling</p>
+                <ul class="topics">
+                    <li>CSS custom properties</li>
+                    <li>Scoping variables</li>
+                    <li>Theming with variables</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="12"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">13</div>
+                <h3 class="day-title">CSS Architecture (BEM)</h3>
+                <p>Organize your styles effectively</p>
+                <ul class="topics">
+                    <li>BEM methodology</li>
+                    <li>Component-based styling</li>
+                    <li>Maintainability best practices</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="13"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">14</div>
+                <h3 class="day-title">Preprocessors (Sass)</h3>
+                <p>Enhance your CSS workflow</p>
+                <ul class="topics">
+                    <li>Sass variables and nesting</li>
+                    <li>Mixins and functions</li>
+                    <li>Modular Sass architecture</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="14"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">15</div>
+                <h3 class="day-title">CSS Frameworks (Tailwind)</h3>
+                <p>Rapid development with utility classes</p>
+                <ul class="topics">
+                    <li>Utility-first CSS</li>
+                    <li>Tailwind configuration</li>
+                    <li>Responsive design with Tailwind</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="15"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 4: JavaScript Fundamentals -->
+            <div class="week-divider">
+                <h2><i class="fab fa-js"></i> Week 4: JavaScript Fundamentals</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">16</div>
+                <h3 class="day-title">JavaScript Basics</h3>
+                <p>Core programming concepts</p>
+                <ul class="topics">
+                    <li>Variables and data types</li>
+                    <li>Operators and expressions</li>
+                    <li>Conditional statements</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="16"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">17</div>
+                <h3 class="day-title">Functions & Scope</h3>
+                <p>Reusable code blocks</p>
+                <ul class="topics">
+                    <li>Function declarations & expressions</li>
+                    <li>Parameters and arguments</li>
+                    <li>Scope and closures</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="17"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">18</div>
+                <h3 class="day-title">Arrays & Objects</h3>
+                <p>Working with complex data</p>
+                <ul class="topics">
+                    <li>Array methods (map, filter, reduce)</li>
+                    <li>Object properties and methods</li>
+                    <li>JSON data format</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="18"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">19</div>
+                <h3 class="day-title">DOM Manipulation</h3>
+                <p>Interacting with web pages</p>
+                <ul class="topics">
+                    <li>Selecting elements</li>
+                    <li>Modifying content and attributes</li>
+                    <li>Event handling</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="19"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">20</div>
+                <h3 class="day-title">Asynchronous JavaScript</h3>
+                <p>Non-blocking operations</p>
+                <ul class="topics">
+                    <li>Callbacks</li>
+                    <li>Promises</li>
+                    <li>Async/await</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="20"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 5: Advanced JavaScript -->
+            <div class="week-divider">
+                <h2><i class="fas fa-rocket"></i> Week 5: Advanced JavaScript</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">21</div>
+                <h3 class="day-title">ES6+ Features</h3>
+                <p>Modern JavaScript syntax</p>
+                <ul class="topics">
+                    <li>Arrow functions</li>
+                    <li>Destructuring</li>
+                    <li>Spread and rest operators</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="21"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">22</div>
+                <h3 class="day-title">Modules & Bundlers</h3>
+                <p>Organize and bundle your code</p>
+                <ul class="topics">
+                    <li>ES Modules</li>
+                    <li>Webpack basics</li>
+                    <li>Code splitting</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="22"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">23</div>
+                <h3 class="day-title">APIs & Fetch</h3>
+                <p>Connect to external data sources</p>
+                <ul class="topics">
+                    <li>HTTP methods</li>
+                    <li>Fetch API</li>
+                    <li>Working with JSON data</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="23"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">24</div>
+                <h3 class="day-title">Error Handling & Debugging</h3>
+                <p>Build robust applications</p>
+                <ul class="topics">
+                    <li>Try/catch blocks</li>
+                    <li>Debugging tools</li>
+                    <li>Error types</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="24"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">25</div>
+                <h3 class="day-title">Testing Fundamentals</h3>
+                <p>Ensure code quality</p>
+                <ul class="topics">
+                    <li>Unit testing concepts</li>
+                    <li>Jest framework</li>
+                    <li>Writing testable code</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="25"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 6: Frameworks & Tools -->
+            <div class="week-divider">
+                <h2><i class="fas fa-cogs"></i> Week 6: Frameworks & Tools</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">26</div>
+                <h3 class="day-title">React Fundamentals</h3>
+                <p>Component-based UI library</p>
+                <ul class="topics">
+                    <li>JSX syntax</li>
+                    <li>Components and props</li>
+                    <li>State management</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="26"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">27</div>
+                <h3 class="day-title">React Hooks & Effects</h3>
+                <p>Modern React features</p>
+                <ul class="topics">
+                    <li>useState and useEffect</li>
+                    <li>Custom hooks</li>
+                    <li>Context API</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="27"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">28</div>
+                <h3 class="day-title">Vue.js Introduction</h3>
+                <p>The progressive framework</p>
+                <ul class="topics">
+                    <li>Vue instance</li>
+                    <li>Directives and templates</li>
+                    <li>Component system</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="28"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">29</div>
+                <h3 class="day-title">State Management</h3>
+                <p>Managing complex application state</p>
+                <ul class="topics">
+                    <li>Redux fundamentals</li>
+                    <li>Vuex for Vue.js</li>
+                    <li>State management patterns</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="29"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">30</div>
+                <h3 class="day-title">Routing</h3>
+                <p>Navigation in single-page apps</p>
+                <ul class="topics">
+                    <li>React Router</li>
+                    <li>Vue Router</li>
+                    <li>Dynamic routing</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="30"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <!-- Week 7: Final Touches & Deployment -->
+            <div class="week-divider">
+                <h2><i class="fas fa-flag-checkered"></i> Week 7: Final Touches & Deployment</h2>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">31</div>
+                <h3 class="day-title">Performance Optimization</h3>
+                <p>Make your apps lightning fast</p>
+                <ul class="topics">
+                    <li>Lazy loading</li>
+                    <li>Code splitting</li>
+                    <li>Performance auditing tools</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="31"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">32</div>
+                <h3 class="day-title">Web Accessibility</h3>
+                <p>Build inclusive applications</p>
+                <ul class="topics">
+                    <li>WCAG guidelines</li>
+                    <li>ARIA attributes</li>
+                    <li>Accessibility testing</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="32"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">33</div>
+                <h3 class="day-title">Deployment Strategies</h3>
+                <p>Get your projects online</p>
+                <ul class="topics">
+                    <li>Static site hosting</li>
+                    <li>Netlify/Vercel</li>
+                    <li>CI/CD pipelines</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="33"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-number">34</div>
+                <h3 class="day-title">Portfolio Project</h3>
+                <p>Showcase your new skills</p>
+                <ul class="topics">
+                    <li>Project planning</li>
+                    <li>Implementation</li>
+                    <li>Deployment and presentation</li>
+                </ul>
+                <div class="checkbox-container">
+                    <div class="custom-checkbox" data-day="34"></div>
+                    <div class="checkbox-label">Mark as Complete</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Frontend Web Development 34-Day Plan </p>
+            <p>© 2025 Frontend Mastery Journey</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize completion status from localStorage
+            const totalDays = 34;
+            let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
+            
+            // Update UI based on stored data
+            updateProgress();
+            
+            // Set up checkbox event listeners
+            document.querySelectorAll('.custom-checkbox').forEach(checkbox => {
+                const day = parseInt(checkbox.getAttribute('data-day'));
+                
+                // Set initial state
+                if (completedDays.includes(day)) {
+                    checkbox.classList.add('checked');
+                }
+                
+                // Add click event
+                checkbox.addEventListener('click', () => {
+                    checkbox.classList.toggle('checked');
+                    
+                    if (checkbox.classList.contains('checked')) {
+                        if (!completedDays.includes(day)) {
+                            completedDays.push(day);
+                        }
+                    } else {
+                        completedDays = completedDays.filter(d => d !== day);
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('completedDays', JSON.stringify(completedDays));
+                    
+                    // Update progress display
+                    updateProgress();
+                });
+            });
+            
+            function updateProgress() {
+                const completedCount = completedDays.length;
+                const percentage = Math.round((completedCount / totalDays) * 100);
+                
+                // Update progress bar
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.style.width = `${percentage}%`;
+                progressBar.querySelector('.progress-text').textContent = `${percentage}% Complete`;
+                
+                // Update stats
+                document.getElementById('days-completed').textContent = completedCount;
+                document.getElementById('days-remaining').textContent = totalDays - completedCount;
+                document.getElementById('completion').textContent = `${percentage}%`;
+            }
+        });
+    </script>
+</body>
+</html>
